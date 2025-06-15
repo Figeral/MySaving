@@ -1,5 +1,5 @@
 [package]
-name = "MySaving"
+name = "my_saving"
 version = "0.0.0"
 edition = "2021"
 publish = false
