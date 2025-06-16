@@ -20,7 +20,6 @@ pub struct WidthdrawalEvent {
     pub nonce: u64,
     pub user_addr: Address,
     pub amount: u64,
-    pub is_paused: bool,
     pub timestamp: u64,
 }
 
@@ -43,6 +42,14 @@ struct UserAcc {
 
 #[contractimpl]
 impl Contract {
+    pub fn initialize(env: Env, owner: Address) {
+        let _instance = env.storage().instance();
+        if _instance.has(&DataKeys::Owner) {
+            panic!("An Owner is already set who's : {:?}", owner);
+        }
+        _instance.set(&DataKeys::Owner, &owner);
+    }
+
     pub fn deposite(env: Env, user_addr: Address, amount: u64) {
         let _instance = env.storage().instance();
         let mut dp_list: Vec<DepositeEvent> =
