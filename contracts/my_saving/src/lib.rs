@@ -1,4 +1,4 @@
-use soroban_sdk::{contract, contractimpl, contracttype, BytesN, Env, Vec};
+use soroban_sdk::{contract, contractimpl, contracttype, Address, BytesN, Env, Vec};
 // must implement an owner validation service for pausing and unpausing
 //  pause only done on Widthdrawal
 //ByteN is for fixed length array , whose the oppose of vec
@@ -9,7 +9,7 @@ pub struct Contract;
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd)]
 pub struct DepositeEvent {
     pub nonce: u64,
-    pub user_pubkey: BytesN<32>,
+    pub user_addr: Address,
     pub amount: u64,
     pub timestamp: u64,
 }
@@ -18,7 +18,7 @@ pub struct DepositeEvent {
 #[derive(Clone, PartialEq, Eq, PartialOrd)]
 pub struct WidthdrawalEvent {
     pub nonce: u64,
-    pub user_pubkey: BytesN<32>,
+    pub user_addr: Address,
     pub amount: u64,
     pub is_paused: bool,
     pub timestamp: u64,
@@ -37,43 +37,43 @@ pub enum DataKeys {
 #[contracttype]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd)]
 struct UserAcc {
-    pubkey: BytesN<32>,
+    addr: Address,
     balance: u64,
 }
 
 #[contractimpl]
 impl Contract {
-    pub fn deposite(env: Env, user_pubkey: BytesN<32>, amount: u64) {
+    pub fn deposite(env: Env, user_addr: Address, amount: u64) {
         let _instance = env.storage().instance();
         let mut dp_list: Vec<DepositeEvent> =
             _instance.get(&DataKeys::Deposite).unwrap_or(Vec::new(&env));
         let nonce = dp_list.first().map(|dp| dp.nonce + 1).unwrap_or(0);
         let new_dp = DepositeEvent {
             nonce: nonce,
-            user_pubkey: user_pubkey.clone(),
+            user_addr: user_addr.clone(),
             amount: amount.clone(),
             timestamp: env.ledger().timestamp(),
         };
 
         dp_list.push_front(new_dp);
         _instance.set(&DataKeys::Deposite, &dp_list);
-        update_balance(env.clone(), user_pubkey.clone(), amount.clone());
+        update_balance(env.clone(), user_addr.clone(), amount.clone());
         //  Ok(())
     }
 
-    pub fn get_deposites(env: Env, _user_pubkey: BytesN<32>) -> Vec<DepositeEvent> {
+    pub fn get_deposites(env: Env, user_pubkey: Address) -> Vec<DepositeEvent> {
         let _instance = env.storage().instance();
         let dps: Vec<DepositeEvent> = _instance.get(&DataKeys::Deposite).unwrap_or(Vec::new(&env));
         let mut result = Vec::new(&env);
         for dp in dps.iter() {
-            if dp.user_pubkey == _user_pubkey {
+            if dp.user_addr == user_pubkey {
                 result.push_back(dp);
             }
         }
         result
     }
-    pub fn get_balance(env: Env, _user_pubkey: BytesN<32>) -> u64 {
-        match get_user(env.clone(), _user_pubkey.clone()) {
+    pub fn get_balance(env: Env, user_addr: Address) -> u64 {
+        match get_user(env.clone(), user_addr.clone()) {
             Some(user) => user.balance,
             None => 0,
         }
@@ -89,26 +89,26 @@ impl Contract {
         let _instance = env.storage().instance();
     }
 }
-fn get_user(env: Env, _user_pubkey: BytesN<32>) -> Option<UserAcc> {
+fn get_user(env: Env, user_pubkey: Address) -> Option<UserAcc> {
     let _instance = env.storage().instance();
     let users: Vec<UserAcc> = _instance.get(&DataKeys::User).unwrap_or(Vec::new(&env));
     for user in users.iter() {
-        if user.pubkey == _user_pubkey {
+        if user.addr == user_pubkey {
             Some(user);
         }
     }
     None
 }
-fn update_balance(env: Env, _user_pubkey: BytesN<32>, new_balance: u64) {
+fn update_balance(env: Env, user_addr: Address, new_balance: u64) {
     let _instance = env.storage().instance();
     let mut users: Vec<UserAcc> = _instance.get(&DataKeys::User).unwrap_or(Vec::new(&env));
     let mut found = false;
 
     for i in 0..users.len() {
         if let Some(user) = users.get(i) {
-            if user.pubkey == _user_pubkey {
+            if user.addr == user_addr {
                 let updated_user = UserAcc {
-                    pubkey: _user_pubkey.clone(),
+                    addr: user_addr.clone(),
                     balance: new_balance.clone(),
                 };
                 users.set(i, updated_user);
@@ -120,7 +120,7 @@ fn update_balance(env: Env, _user_pubkey: BytesN<32>, new_balance: u64) {
 
     if !found {
         users.push_front(UserAcc {
-            pubkey: _user_pubkey.clone(),
+            addr: user_addr.clone(),
             balance: new_balance.clone(),
         });
     }
