@@ -8,6 +8,7 @@ pub struct Contract;
 #[contracttype]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd)]
 pub struct DepositeEvent {
+    pub nonce: u64,
     pub user_pubkey: BytesN<32>,
     pub amount: u64,
     pub timestamp: u64,
@@ -16,6 +17,7 @@ pub struct DepositeEvent {
 #[contracttype]
 #[derive(Clone, PartialEq, Eq, PartialOrd)]
 pub struct WidthdrawalEvent {
+    pub nonce: u64,
     pub user_pubkey: BytesN<32>,
     pub amount: u64,
     pub is_paused: bool,
@@ -28,6 +30,8 @@ pub enum DataKeys {
     Deposite,
     Widthdrawal,
     User,
+    Owner,
+    Paused,
 }
 
 #[contracttype]
@@ -43,7 +47,9 @@ impl Contract {
         let _instance = env.storage().instance();
         let mut dp_list: Vec<DepositeEvent> =
             _instance.get(&DataKeys::Deposite).unwrap_or(Vec::new(&env));
+        let nonce = dp_list.first().map(|dp| dp.nonce + 1).unwrap_or(0);
         let new_dp = DepositeEvent {
+            nonce: nonce,
             user_pubkey: user_pubkey.clone(),
             amount: amount.clone(),
             timestamp: env.ledger().timestamp(),
