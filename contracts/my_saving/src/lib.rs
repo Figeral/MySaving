@@ -152,7 +152,7 @@ impl Contract {
     }
     pub fn get_all_widthdrawal(env: Env, owner_addr: Address) -> Vec<WidthdrawalEvent> {
         let _instance = env.storage().instance();
-        let stored_owner = get_owner(env.clone());
+        let stored_owner = get_owner(&env);
         if stored_owner != Some(owner_addr.clone()) {
             panic!("Only the contract owner can view all the widthdrawal ")
         }
@@ -162,7 +162,7 @@ impl Contract {
     }
     pub fn pause_widthdrawal(env: Env, owner_addr: Address, action: Actions) -> bool {
         let _instance = env.storage().instance();
-        if !is_owner(env.clone(), owner_addr.clone()) {
+        if !is_owner(&env, &owner_addr) {
             panic!("Only owner can pause/unpause withdrawals");
         }
         match action {
@@ -188,13 +188,13 @@ fn get_user(env: Env, user_pubkey: Address) -> Option<UserAcc> {
     }
     None
 }
-fn get_owner(env: Env) -> Option<Address> {
+fn get_owner(env: &Env) -> Option<Address> {
     let _instance = env.storage().instance();
     _instance.get::<_, Address>(&DataKeys::Owner)
 }
-fn is_owner(env: Env, owner: Address) -> bool {
-    match get_owner(env.clone()) {
-        Some(o) => o == owner,
+fn is_owner(env: &Env, owner: &Address) -> bool {
+    match get_owner(env) {
+        Some(o) => o == owner.to_owned(),
         None => false,
     }
 }
