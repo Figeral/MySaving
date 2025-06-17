@@ -69,8 +69,7 @@ impl Contract {
             amount: amount.clone(),
             timestamp: env.ledger().timestamp(),
         };
-
-        dp_list.push_front(new_dp);
+        dp_list.push_back(new_dp);
         _instance.set(&DataKeys::Deposite, &dp_list);
         update_balance(
             env.clone(),
@@ -202,7 +201,6 @@ fn update_balance(env: Env, user_addr: Address, new_balance: i64) {
     let _instance = env.storage().instance();
     let mut users: Vec<UserAcc> = _instance.get(&DataKeys::User).unwrap_or(Vec::new(&env));
     let mut found = false;
-
     for i in 0..users.len() {
         if let Some(user) = users.get(i) {
             if user.addr == user_addr {

@@ -1,9 +1,11 @@
 {
   "generators": {
-    "address": 2,
+    "address": 3,
     "nonce": 0
   },
   "auth": [
+    [],
+    [],
     [],
     [],
     [],
@@ -59,7 +61,7 @@
                                     "symbol": "amount"
                                   },
                                   "val": {
-                                    "u64": 10000
+                                    "u64": 40
                                   }
                                 },
                                 {
@@ -100,7 +102,7 @@
                           ]
                         },
                         "val": {
-                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
                         }
                       },
                       {
@@ -140,7 +142,7 @@
                                     "symbol": "balance"
                                   },
                                   "val": {
-                                    "i64": 10000
+                                    "i64": 60
                                   }
                                 }
                               ]
