@@ -49,12 +49,32 @@ fn test_withdrawal() {
         i64::try_from(initial_deposit - withdrawal_amount).expect("Sign error")
     );
 
-    let events = client.get_all_widthdrawal(&owner); // Fixed typo here too
+    let events = client.get_all_widthdrawal(&owner);
     assert_eq!(events.len(), 1);
     let wd_event = events.get(0).unwrap();
     assert_eq!(wd_event.amount, withdrawal_amount);
     assert_eq!(wd_event.user_addr, user_addr);
 }
 
+//#[test]
+//fn test_acc() {}
 #[test]
-fn test_acc() {}
+fn test_pause_unpause_withdrawals() {
+    let env = Env::default();
+    let contract_id = env.register(Contract, ());
+    let client = ContractClient::new(&env, &contract_id);
+
+    let owner = Address::generate(&env);
+
+    client.initialize(&owner);
+
+    // Pause withdrawals
+    let paused = client.pause_widthdrawal(&owner, &Actions::Pause);
+    assert_eq!(paused, true);
+    assert_eq!(client.is_pause_widthdrawal(), true);
+
+    // Unpause withdrawals
+    let unpaused = client.pause_widthdrawal(&owner, &Actions::Unpause);
+    assert_eq!(unpaused, false);
+    assert_eq!(client.is_pause_widthdrawal(), false);
+}
