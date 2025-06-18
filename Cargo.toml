@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = [ "client",
+members = [ 
   "contracts/*",
 ]
 
@@ -21,3 +21,8 @@ lto = true
 [profile.release-with-logs]
 inherits = "release"
 debug-assertions = true
+
+[profile.release.package."*"]
+codegen-units = 1
+debug-assertions = false
+overflow-checks = true

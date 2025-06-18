@@ -1,3 +1,4 @@
+#![no_std]
 use soroban_sdk::{contract, contractimpl, contracttype, Address, Env, Vec};
 // must implement an owner validation service for pausing and unpausing
 //  pause only done on Widthdrawal
@@ -193,7 +194,7 @@ fn get_owner(env: &Env) -> Option<Address> {
 }
 fn is_owner(env: &Env, owner: &Address) -> bool {
     match get_owner(env) {
-        Some(o) => o == owner.to_owned(),
+        Some(o) => o == owner.clone(),
         None => false,
     }
 }
