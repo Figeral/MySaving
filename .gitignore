@@ -3,4 +3,4 @@ target
 
 # Local settings
 .soroban
-.stellar
+#.stellar
