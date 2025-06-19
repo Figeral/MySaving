@@ -1,4 +1,4 @@
-rustup target add wasm32v1-none
+rustup target add wasm32-unknown-unknown 
 stellar contract build
 cargo install --locked stellar-cli --features opt
 cargo build --target wasm32-unknown-unknown --release

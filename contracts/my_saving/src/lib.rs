@@ -130,7 +130,7 @@ impl Contract {
         };
 
         wd_list.push_front(new_dp);
-        _instance.set(&DataKeys::Deposite, &wd_list);
+        _instance.set(&DataKeys::Widthdrawal, &wd_list);
         update_balance(
             env.clone(),
             user_addr.clone(),
@@ -139,8 +139,8 @@ impl Contract {
     }
     pub fn get_widthdrawal(env: Env, user_addr: Address) -> Vec<WidthdrawalEvent> {
         let _instance = env.storage().instance();
-        let dps: Vec<WidthdrawalEvent> = _instance
-            .get(&DataKeys::Widthdrawal)
+        let dps = _instance
+            .get::<_, Vec<WidthdrawalEvent>>(&DataKeys::Widthdrawal)
             .unwrap_or(Vec::new(&env));
         let mut result = Vec::new(&env);
         for dp in dps.iter() {
@@ -157,7 +157,7 @@ impl Contract {
             panic!("Only the contract owner can view all the widthdrawal ")
         }
         _instance
-            .get::<_, Vec<WidthdrawalEvent>>(&DataKeys::Deposite)
+            .get::<_, Vec<WidthdrawalEvent>>(&DataKeys::Widthdrawal)
             .unwrap_or(Vec::new(&env))
     }
     pub fn pause_widthdrawal(env: Env, owner_addr: Address, action: Actions) -> bool {
