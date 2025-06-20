@@ -46,7 +46,7 @@ https://stellar.expert/explorer/testnet/contract/CALLWNMZ2NTX32XBO4UD3IGPD46YJSY
 The complete deployment procedure script is in the `deploy.sh` file. Considering you already install the stellar software development kit . 
 
 ### Example 
-makeing a deposite 
+#### makeing a deposite 
 ```bash
 stellar contract invoke \
   --id CALLWNMZ2NTX32XBO4UD3IGPD46YJSY46EVRFX73VSEITTRYIYQ4ISXR\
@@ -56,8 +56,9 @@ stellar contract invoke \
   deposite \       
   --user_addr GBMX6SNS6YK2A7QVEUELBMDCK4TDWW7QIAV2EUKDUHI5G5GAJOFN7FDF   --amount 109200
 ```
+<img width="1293" alt="Screenshot 2025-06-20 at 08 04 02" src="https://github.com/user-attachments/assets/9a5e0f75-1abb-497f-ae44-cc9a966a07a1" />
 
-geting balanace 
+#### geting balanace 
 ```
 stellar contract invoke \
   --id CALLWNMZ2NTX32XBO4UD3IGPD46YJSY46EVRFX73VSEITTRYIYQ4ISXR\
@@ -67,7 +68,7 @@ stellar contract invoke \
   get_balance \
 ```
 
-making a widthdrawal 
+#### making a widthdrawal 
 ```
  --id CALLWNMZ2NTX32XBO4UD3IGPD46YJSY46EVRFX73VSEITTRYIYQ4ISXR\
   --source fitzgerald \
@@ -76,7 +77,9 @@ making a widthdrawal
   widthdrawal \
   --user_addr GBMX6SNS6YK2A7QVEUELBMDCK4TDWW7QIAV2EUKDUHI5G5GAJOFN7FDF   --amount 4600
 ```
-pause widthdrawal ps. only fitzgerald source address can invoke this function since his initialized as the owner 
+<img width="1298" alt="Screenshot 2025-06-20 at 07 58 20" src="https://github.com/user-attachments/assets/ea4a4fe4-1ea7-4b48-86cd-05361ccb18d9" />
+
+#### pause widthdrawal ps. only fitzgerald source address can invoke this function since his initialized as the owner 
 ```
 stellar contract invoke \
   --id CALLWNMZ2NTX32XBO4UD3IGPD46YJSY46EVRFX73VSEITTRYIYQ4ISXR\
@@ -86,3 +89,7 @@ stellar contract invoke \
   pause_widthdrawal \
   --owner_addr GBMX6SNS6YK2A7QVEUELBMDCK4TDWW7QIAV2EUKDUHI5G5GAJOFN7FDF --action pause
 ```
+
+<img width="1314" alt="Screenshot 2025-06-20 at 08 07 29" src="https://github.com/user-attachments/assets/1f116e9c-563a-4775-a543-ef05794b7e31" />
+
+
